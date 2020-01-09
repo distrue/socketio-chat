@@ -6,7 +6,8 @@ import styled from 'styled-components';
 import io from 'socket.io-client';
 import axios from 'axios';
 
-const chatUrl = 'http://localhost:4000';
+const backUrl = 'http://localhost:4000';
+const chatUrl = 'http://localhost:5000';
 
 const SendTextButton = (props) => {
   const { text, onClick } = props;
@@ -21,10 +22,10 @@ const SendTextButton = (props) => {
   );
 };
 
-const MsgBox = ({msg, nickInfo}) => {
+const MsgBox = ({msg, chatInfo}) => {
   // eslint-disable-next-line react/prop-types
   if (typeof (msg.data) === 'string') {
-    if (msg.receiver === nickInfo.sender) {
+    if (msg.receiver === chatInfo.sender) {
       return (
         <MyMsgContainer>
           <div className="text">{msg.data}</div>
@@ -43,7 +44,7 @@ const MsgBox = ({msg, nickInfo}) => {
 };
 
 const Index = () => {
-  const [nickInfo, setNickInfo] = React.useState({});
+  const [chatInfo, setChatInfo] = React.useState({});
   const [socket, setSocket] = React.useState(null); // socket 설정
   const [text, setText] = React.useState(''); // 현재 사용자가 작성 중인 text 메시지
   const [msgs, setMsgs] = React.useState([]); // 이전 대화 정보
@@ -52,7 +53,7 @@ const Index = () => {
   React.useEffect(() => {
     // 날짜 기준 제거, 전체 불러오기
     // from, to의 경우 page 접속 시 자신, 대상으로 수정
-    axios.get(`${chatUrl}/msgs?from=cli-0&to=cli-1`)
+    axios.get(`${backUrl}/msgs?from=cli-0&to=cli-1`)
       .then(ans => {
         if(!ans.data.msg) return;
         setMsgs(ans.data.msg);
@@ -67,13 +68,13 @@ const Index = () => {
     };
     setSocketPromise().then(async (tempSocket) => {
       setSocket(tempSocket);
-      const ans = await axios.get(`${chatUrl}/isLogin`); // withCredentials 추가할 것
+      const ans = await axios.get(`${backUrl}/isLogin`); // withCredentials 추가할 것
       // 보안성 생략: isLogin에서 token 제공 후 server에서 token과 nickname 비교
       if(!ans.data) return;
-      setNickInfo({...nickInfo, sender: ans.data.nickname});
+      setChatInfo({...chatInfo, sender: ans.data.id});
       
-      tempSocket.emit('login', ans.data.nickname);
-      console.log(`login: ${ans.data.nickname} `);
+      tempSocket.emit('login', ans.data.id);
+      console.log(`login: ${ans.data.id} `);
     });
   }, []);
 
@@ -90,9 +91,9 @@ const Index = () => {
 
   //메시지 보내기
   const sendTextChat = () => {
-    socket.emit('chat', { receiver: nickInfo.receiver, data: text, type: 'text' });
+    socket.emit('chat', { receiver: chatInfo.receiver, data: text, type: 'text' });
     setText('');
-    console.log({ receiver: nickInfo.receiver, data: text, type: 'text' });
+    console.log({ receiver: chatInfo.receiver, data: text, type: 'text' });
   };
 
   // TODO: 이미지 업로드
@@ -101,14 +102,14 @@ const Index = () => {
   return (
     <Background>
       <SignBox>
-        <input className="box" value={nickInfo.receiver} onChange={e => {
-          setNickInfo({...nickInfo, receiver: e.target.value});
+        <input className="box" value={chatInfo.receiver} onChange={e => {
+          setChatInfo({...chatInfo, receiver: e.target.value});
         }}/>
         write target
       </SignBox>
       {
         msgs.map((msg, idx) => (
-          <MsgBox key={idx} msg={msg} nickInfo={nickInfo} />
+          <MsgBox key={idx} msg={msg} chatInfo={chatInfo} />
         ))
       }
       <input type="text" onChange={(e) => setText(e.target.value)} value={text} />
