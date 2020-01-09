@@ -14,17 +14,17 @@ var userdb = [];
 
 // user 들의 message 기록을 담고 있는 객체, mongoDB로 전환 필요
 // 채팅 객체에 담겨야 하는 data 형식은 아래와 같음
-// {receiver: "cli-0", data: "Hello", type: "text"}
-// {receiver: "cli-0", data: "imageURL", type: "image"}
+// {receiver: "cli-0", data: "Hello", type: "text", date: new Date()}
+// {receiver: "cli-0", data: "imageURL", type: "image", date: new Date()}
 // 이미지의 경우 업로드 된걸 cli가 확인하고 server에 text처럼 msg 저장을 요청할 예정
 var msgdb = {
   'cli-0': {'cli-1': [
-    {receiver: "cli-0", data: "Hello", type: "text"},
-    {receiver: "cli-1", data: "Hello too", type: "text"}
+    {receiver: "cli-0", data: "Hello", type: "text", date: new Date()},
+    {receiver: "cli-1", data: "Hello too", type: "text", date: new Date()}
   ]},
   'cli-1': {'cli-0': [
-    {receiver: "cli-0", data: "Hello", type: "text"},
-    {receiver: "cli-1", data: "Hello too", type: "text"}
+    {receiver: "cli-0", data: "Hello", type: "text", date: new Date()},
+    {receiver: "cli-1", data: "Hello too", type: "text", date: new Date()}
   ]},
 };
 

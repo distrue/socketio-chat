@@ -91,9 +91,9 @@ const Index = () => {
 
   //메시지 보내기
   const sendTextChat = () => {
-    socket.emit('chat', { receiver: chatInfo.receiver, data: text, type: 'text' });
+    socket.emit('chat', { receiver: chatInfo.receiver, data: text, type: 'text', date: new Date() });
     setText('');
-    console.log({ receiver: chatInfo.receiver, data: text, type: 'text' });
+    console.log({ receiver: chatInfo.receiver, data: text, type: 'text', date: new Date() });
   };
 
   // TODO: 이미지 업로드
