@@ -30,6 +30,10 @@ const MsgBox = ({ msg, chatInfo, profileImage }) => {
     if (msg.receiver === chatInfo.sender) {
       return (
         <SendedMsgContainer>
+          <div className='triContainer'>
+            <img className='shadowTri' alt="triangle" src='/static/greenTri.png' />
+            <img className='tri' alt="triangle" src='/static/greenTri.png' />
+          </div>
           <div className='msgBox'>{msg.data}</div>
         </SendedMsgContainer>
       );
@@ -37,9 +41,13 @@ const MsgBox = ({ msg, chatInfo, profileImage }) => {
     return (
       <ReceivedMsgContainer>
         <div className='profile'>
-          <label htmlFor="profileImage">
-            <img alt="pf" src={profileImage || 'static/profileimg.png'} />
+          <label htmlFor='profileImage'>
+            <img alt="pf" src={profileImage || '/static/profileimg.png'} />
           </label>
+        </div>
+        <div className='triContainer'>
+          <img className='shadowTri' alt="triangle" src='/static/greyTri.png' />
+          <img className='tri' alt="triangle" src='/static/greyTri.png' />
         </div>
         <div className='msgBox'>{msg.data}</div>
       </ReceivedMsgContainer>
@@ -209,13 +217,31 @@ const ReceivedMsgContainer = styled.div`
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      max-width: 30px;
-      max-height: 30px;
+      max-width: 18px;
+      max-height: 18px;
+    }
+  }
+  .triContainer {
+    position: relative;
+    margin-left: 4px;
+    width: 12px;
+    height: 6px;
+    .shadowTri {
+      position:fixed;
+      width: 12px;
+      height: 6px;
+      filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.16));
+    }
+    .tri {
+      position:fixed;
+      width: 12px;
+      height: 6px;
+      z-index: 1;
     }
   }
   .msgBox {
     position: relative;
-    margin-left: 14px;
+    margin-left: -2px;
     max-width: 230px;
     height: auto;
     box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.16);
@@ -226,6 +252,7 @@ const ReceivedMsgContainer = styled.div`
     text-align: left;
     color: #707070;
     padding: 11px 26px 8px 12px;
+    border-radius: 3px;
   }
 `
 const SendedMsgContainer = styled.div`
@@ -235,10 +262,28 @@ const SendedMsgContainer = styled.div`
   display: flex;
   flex-direction: row-reverse;
   margin-bottom: 23px;
+  .triContainer {
+    position: relative;
+    margin-right: 18px; 
+    width: 12px;
+    height: 6px;
+    .shadowTri {
+      position:fixed;
+      width: 12px;
+      height: 6px;
+      filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.16));
+    }
+    .tri {
+      position:fixed;
+      width: 12px;
+      height: 6px;
+      z-index: 1;
+    }
+  }
   .msgBox {
     position: relative;
     right: 0px;
-    margin-right: 18px;
+    margin-right: -2px;
     max-width: 230px;
     height: auto;
     box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.16);
@@ -249,6 +294,7 @@ const SendedMsgContainer = styled.div`
     text-align: left;
     color: #ffffff;
     padding: 11px 26px 8px 12px;
+    border-radius: 3px;
   }
 `
 
